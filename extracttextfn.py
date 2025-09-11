@@ -1,5 +1,4 @@
 from pypdf import PdfReader
-#file_path = 'C:\\Users\\digan\\Desktop\\example.txt'#let the user select it 
 
 def extract_text_from_pdf(pdf_path,output_path):
     reader = PdfReader(pdf_path)

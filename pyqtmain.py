@@ -4,6 +4,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QFont, QPixmap
 from extracttextfn import extract_text_from_pdf
+from splitpdffn import split_by_range
 
 #initialize main window
 class mainwindow(QMainWindow):
@@ -60,6 +61,9 @@ class mainwindow(QMainWindow):
         layout.addWidget(btn2)
         layout.addWidget(btn3)   
         btn3.clicked.connect(self.extract_text_button)
+        btn2.clicked.connect(self.split_pdf_button)
+
+    #function for activating extract text button
     def extract_text_button(self):     
         if not hasattr(self, 'dropped_pdf_path') or not self.dropped_pdf_path:
             self.dd_label.setText('No PDF File dropped !!')
@@ -70,6 +74,27 @@ class mainwindow(QMainWindow):
             self.dd_label.setText(f'Text extracted and saved to : {output_path}')
         except Exception as e:
             self.dd_label.setText('Error extracting text')
+
+    #function for activating split pdf button
+    def split_pdf_button(self):
+        if not hasattr(self, 'dropped_pdf_path') or not self.dropped_pdf_path:
+            self.dd_label.setText('No PDF File dropped !!')
+            return
+        try:
+            ranges_value = "2-6"  
+            out_paths = split_by_range(
+                self.dropped_pdf_path,
+                output_template="split_{i}_{start}-{end}.pdf",
+                ranges=ranges_value
+        )
+            if len(out_paths) == 1:
+                self.dd_label.setText(f"Split saved: {out_paths}")
+            else:
+                self.dd_label.setText(f"Split created: {len(out_paths)} files (e.g., {out_paths})")
+        except Exception as e:
+            self.dd_label.setText(f"Error splitting PDF: {e}")
+
+
     
     #Define functions for drag and drop 
         #accept only if files are dragged 
